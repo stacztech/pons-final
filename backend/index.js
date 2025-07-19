@@ -19,7 +19,7 @@ const __dirname = path.resolve();
 
 app.use(cors({ 
   origin: process.env.NODE_ENV === "production" 
-    ? ["https://meat-website-*.vercel.app", "https://*.vercel.app"] 
+    ? ["https://your-frontend-domain.vercel.app", "https://your-custom-domain.com"] 
     : "http://localhost:4200", 
   credentials: true 
 }));
