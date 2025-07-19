@@ -40,10 +40,26 @@ app.use(cors({
 app.use(express.json()); // allows us to parse incoming requests:req.body
 app.use(cookieParser()); // allows us to parse incoming cookies
 
-app.use("/api/auth", authRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/addresses", addressRoutes);
-app.use("/api/cart", cartRoutes);
+// Middleware to ensure database is connected before API routes
+const ensureDBConnected = async (req, res, next) => {
+	if (!dbConnected) {
+		try {
+			await initializeDB();
+		} catch (error) {
+			return res.status(500).json({ 
+				success: false, 
+				message: 'Database not available',
+				error: error.message 
+			});
+		}
+	}
+	next();
+};
+
+app.use("/api/auth", ensureDBConnected, authRoutes);
+app.use("/api/orders", ensureDBConnected, orderRoutes);
+app.use("/api/addresses", ensureDBConnected, addressRoutes);
+app.use("/api/cart", ensureDBConnected, cartRoutes);
 
 // Remove frontend serving since we have separate deployments
 // if (process.env.NODE_ENV === "production") {
@@ -84,17 +100,34 @@ app.get("/test-db", async (req, res) => {
     }
 });
 
+// Database connection state
+let dbConnected = false;
+
+// Initialize database connection
+const initializeDB = async () => {
+	try {
+		await connectDB();
+		dbConnected = true;
+		console.log('Database connection established and ready');
+	} catch (error) {
+		console.error('Database connection failed:', error);
+		dbConnected = false;
+	}
+};
+
 // For Vercel serverless deployment
 if (process.env.NODE_ENV !== 'production') {
 	app.listen(PORT, () => {
 		console.log("Server is running on port: ", PORT);
-		connectDB();
+		initializeDB();
 	});
 } else {
-	// For production (Vercel), connect DB on first request
+	// For production (Vercel), ensure DB is connected before any request
 	app.use(async (req, res, next) => {
 		try {
-			await connectDB();
+			if (!dbConnected) {
+				await initializeDB();
+			}
 			next();
 		} catch (error) {
 			console.error('Database connection failed:', error);

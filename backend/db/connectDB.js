@@ -27,6 +27,9 @@ export const connectDB = async () => {
 			connectTimeoutMS: 30000,
 			heartbeatFrequencyMS: 10000,
 		});
+
+		// Wait for connection to be ready - CRITICAL for preventing buffering timeout
+		await mongoose.connection.asPromise();
 		
 		isConnected = true;
 		console.log(`MongoDB Connected: ${conn.connection.host}`);
