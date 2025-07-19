@@ -19,7 +19,7 @@ const __dirname = path.resolve();
 
 app.use(cors({ 
   origin: process.env.NODE_ENV === "production" 
-    ? ["https://your-frontend-domain.vercel.app", "https://your-custom-domain.com"] 
+    ? ["https://pons-final-frontend.vercel.app", "https://pons-final-frontend-xxxxx.vercel.app"] 
     : "http://localhost:4200", 
   credentials: true 
 }));
