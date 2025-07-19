@@ -9,12 +9,12 @@ import {
 dotenv.config();
 
 let transporter = nodemailer.createTransport({
-	host: "smtp.gmail.com",
-	port: 465,
+	host: process.env.EMAIL_HOST || "smtp.gmail.com",
+	port: process.env.EMAIL_PORT || 465,
 	secure: true,
 	auth: {
-	  user: "ponsmuttonstallandbroilerss@gmail.com",
-	  pass: "xbew urkj vwjj wyne"
+	  user: process.env.EMAIL_USER || "ponsmuttonstallandbroilerss@gmail.com",
+	  pass: process.env.EMAIL_PASS || "xbew urkj vwjj wyne"
 	},
   });
 

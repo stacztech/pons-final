@@ -19,7 +19,7 @@ const __dirname = path.resolve();
 
 app.use(cors({ 
   origin: process.env.NODE_ENV === "production" 
-    ? ["https://your-frontend-project-name.vercel.app", "https://your-frontend-project-name-git-main.vercel.app"]
+    ? [process.env.CLIENT_URL || "https://your-frontend-project-name.vercel.app"]
     : "http://localhost:4200", 
   credentials: true 
 }));
