@@ -1,27 +1,52 @@
-# MeatWebsite
+# Meat Website Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+This is the Angular frontend for the meat website application.
 
-## Development server
+## Development
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+# Install dependencies
+npm install
 
-## Code scaffolding
+# Start development server
+npm start
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Build for production
+npm run build
+```
 
-## Build
+## Vercel Deployment
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+This project is configured for Vercel deployment. The following files have been set up:
 
-## Running unit tests
+- `vercel.json` - Vercel configuration
+- `src/environments/environment.prod.ts` - Production environment variables
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Deployment Steps:
 
-## Running end-to-end tests
+1. Push your code to GitHub
+2. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+3. Click "New Project"
+4. Import your GitHub repository
+5. Configure the project:
+   - **Framework Preset**: Other
+   - **Root Directory**: `meat-website`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist/meat-website`
+6. Add environment variables:
+   - `NODE_ENV`: `production`
+7. Deploy
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Important Notes:
 
-## Further help
+- Update the `apiUrl` in `src/environments/environment.prod.ts` with your backend Vercel URL after deployment
+- The backend URL should be in the format: `https://your-backend-project-name.vercel.app/api`
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Environment Configuration
+
+The application uses environment-specific configuration:
+
+- `environment.ts` - Development settings
+- `environment.prod.ts` - Production settings
+
+Make sure to update the production API URL after deploying your backend.
