@@ -4,7 +4,6 @@ import { map, filter, switchMap, takeUntil, debounceTime, distinctUntilChanged, 
 import { CartItem } from './cart.service';
 import { AuthService, User } from './auth.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 
 export interface OrderItem extends CartItem {
   id: string;
@@ -51,7 +50,7 @@ export interface OrderTracking {
   providedIn: 'root'
 })
 export class OrdersService implements OnDestroy {
-  private apiUrl = `${environment.apiUrl}/orders`;
+  private apiUrl = 'http://localhost:9000/api/orders';
 
   constructor(private authService: AuthService, private http: HttpClient) {
     // No need to subscribe to user changes for backend
