@@ -58,7 +58,54 @@ app.get("/", (req, res) => {
     res.status(200).json({ success: true, message: "API is working" });
 });
 
-app.listen(PORT, () => {
-	console.log("Server is running on port: ", PORT);
-	connectDB();
+// Test database connection
+app.get("/test-db", async (req, res) => {
+    try {
+        const mongoose = await import('mongoose');
+        const status = mongoose.connection.readyState;
+        const statusText = {
+            0: 'disconnected',
+            1: 'connected',
+            2: 'connecting',
+            3: 'disconnecting'
+        };
+        res.json({ 
+            success: true, 
+            dbStatus: statusText[status],
+            message: 'Database connection test',
+            mongoUri: process.env.MONGO_URI ? 'Set' : 'Not set'
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            error: error.message,
+            mongoUri: process.env.MONGO_URI ? 'Set' : 'Not set'
+        });
+    }
 });
+
+// For Vercel serverless deployment
+if (process.env.NODE_ENV !== 'production') {
+	app.listen(PORT, () => {
+		console.log("Server is running on port: ", PORT);
+		connectDB();
+	});
+} else {
+	// For production (Vercel), connect DB on first request
+	app.use(async (req, res, next) => {
+		try {
+			await connectDB();
+			next();
+		} catch (error) {
+			console.error('Database connection failed:', error);
+			res.status(500).json({ 
+				success: false, 
+				message: 'Database connection failed',
+				error: error.message 
+			});
+		}
+	});
+}
+
+// Export for Vercel
+export default app;
