@@ -17,12 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 9000;
 const __dirname = path.resolve();
 
-app.use(cors({ 
-  origin: process.env.NODE_ENV === "production" 
-    ? [process.env.CLIENT_URL || "https://your-frontend-project-name.vercel.app"]
-    : "http://localhost:4200", 
-  credentials: true 
-}));
+app.use(cors({ origin: "http://localhost:4200", credentials: true }));
 
 app.use(express.json()); // allows us to parse incoming requests:req.body
 app.use(cookieParser()); // allows us to parse incoming cookies
@@ -32,8 +27,13 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/cart", cartRoutes);
 
-// Remove static file serving for Vercel deployment
-// Vercel handles static files separately
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+	
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
 
 app.get("/", (req, res) => {
     res.status(200).json({ success: true, message: "API is working" });

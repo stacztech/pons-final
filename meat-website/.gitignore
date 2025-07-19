@@ -37,15 +37,7 @@ yarn-error.log
 testem.log
 /typings
 
-# e2e
-/e2e/*.js
-/e2e/*.map
-
-# System Files
+# System files
 .DS_Store
 Thumbs.db
-
-# Environment files
-.env
-.env.local
-.env.production
+.vercel
